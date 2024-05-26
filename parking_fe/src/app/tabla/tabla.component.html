@@ -1,0 +1,8 @@
+<h1>Tabla de Distribución</h1>
+<table border="1">
+  <tr *ngFor="let fila of datos">
+    <td *ngFor="let celda of fila" [ngClass]="celda == false ? 'celda-true' : 'celda-false'">
+      {{ celda }}
+    </td>
+  </tr>
+</table>

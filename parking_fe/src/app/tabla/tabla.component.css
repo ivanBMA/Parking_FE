@@ -1,0 +1,18 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  td {
+    width: 16.66%; /* Cada celda ocupa un sexto del ancho total */
+    text-align: center;
+    padding: 8px;
+  }
+ 
+  .celda-true {
+    background-color: yellow; /* Color de fondo para celdas con valor true */
+  }
+  
+  .celda-false {
+    background-color: grey; /* Color de fondo para celdas con valor false */
+  }
