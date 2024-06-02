@@ -1,8 +1,16 @@
-<h1>Tabla de Distribución</h1>
+<h1>Tabla de Distribución A</h1>
 <table border="1">
-  <tr *ngFor="let fila of datos">
-    <td *ngFor="let celda of fila" [ngClass]="celda == false ? 'celda-true' : 'celda-false'">
-      {{ celda }}
+  <tr *ngFor="let fila of filas">
+    <td *ngFor="let columna of columnas">
+      <ng-container *ngIf="getElement(fila, columna) as element">
+        <div [ngClass]="{
+              'plaza-ocupada': element.esPlaza && element.ocupado,
+              'plaza-sinocupar': element.esPlaza && !element.ocupado,
+              'celda-true': !element.esPlaza 
+            }">
+          {{ element.esPlaza ? (element.ocupado ? 'Ocupado' : 'Libre') : '_' }}
+        </div>
+      </ng-container>
     </td>
   </tr>
 </table>

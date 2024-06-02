@@ -10,9 +10,17 @@ table {
   }
  
   .celda-true {
-    background-color: yellow; /* Color de fondo para celdas con valor true */
+    color: white;
+    background-color: black; /* Color de fondo para celdas con valor true */
   }
   
   .celda-false {
     background-color: grey; /* Color de fondo para celdas con valor false */
+  }
+  .plaza-ocupada {
+    background-color: red;
+  }
+  
+  .plaza-sinocupar {
+    background-color: green;
   }
