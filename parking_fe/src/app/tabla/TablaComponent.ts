@@ -2,7 +2,8 @@ import { Component, ElementRef, Input, OnInit, ViewChild, input } from '@angular
 import { CommonModule } from '@angular/common';
 import { Parking, ParkingSpot } from '../core/models/parking-spot.model';
 import { DistribucionService } from '../core/services/distribucion.service';
-import { lastValueFrom } from 'rxjs';
+import { Observable, lastValueFrom } from 'rxjs';
+import { SharingService } from '../core/services/sharing.service';
 
 
 @Component({
@@ -18,7 +19,11 @@ export class TablaComponent implements OnInit {
   @Input() columnas: number[] = [];
   @Input() Parkings: Parking[] = [];
   @ViewChild('nombreInput') nombreInput!: ElementRef;
-  constructor(private readonly distribucion: DistribucionService) { }
+  public data$: Observable<Parking>;
+
+  constructor(private readonly distribucion: DistribucionService, public sharingService: SharingService) { 
+    this.data$ = sharingService.parking_Id_observable;
+  }
   fileContent: any;
 
 
@@ -29,6 +34,8 @@ export class TablaComponent implements OnInit {
     console.log('Datos:', this.datos);
     console.log('Filas:', this.filas);
     console.log(this.datos);
+
+    
   }
 
   getElement(fila: number, columna: number): ParkingSpot | undefined {
@@ -91,5 +98,9 @@ export class TablaComponent implements OnInit {
     const elemento = event.target as HTMLSelectElement;
     const parkingId = elemento.value;
     console.log(`Selected option ID: ${parkingId}`);
+
+    const parkingIdParseado: number = parseInt(parkingId, 10);
+    const parking = new Parking(parkingIdParseado, "a");
+    this.sharingService.parking_Id_observableData = parking;
   }
 }
