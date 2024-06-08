@@ -15,4 +15,14 @@ export class Parking {
     public Nombre :string 
   ) {}
 }
+
+export class Plaza {
+  constructor(
+    public  id :number,
+    //La base de datos es 0 o 1 no true o false por que no existe boolean
+    public  ocupado : boolean,
+    public  id_Parking :number,
+    public  id_Distribucion :number
+  ) {}
+}
   

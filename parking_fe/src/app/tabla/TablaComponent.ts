@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnInit, ViewChild, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Parking, ParkingSpot } from '../core/models/parking-spot.model';
+import { Parking, ParkingSpot, Plaza } from '../core/models/parking-spot.model';
 import { DistribucionService } from '../core/services/distribucion.service';
 import { Observable, lastValueFrom } from 'rxjs';
 import { SharingService } from '../core/services/sharing.service';
@@ -19,13 +19,15 @@ export class TablaComponent implements OnInit {
   @Input() filas: number[] = [];
   @Input() columnas: number[] = [];
   @Input() Parkings: Parking[] = [];
+  @Input() plazasA: Plaza[] = [];
   @ViewChild('nombreInput') nombreInput!: ElementRef;
-  public data$: Observable<Parking>;
+  public parkingOb$: Observable<Parking>;
   public media$: Observable<Media>;
-
+  
   constructor(private readonly distribucion: DistribucionService, public sharingService: SharingService) { 
-    this.data$ = sharingService.parking_Id_observable;
+    this.parkingOb$ = sharingService.parking_Id_observable;
     this.media$ = sharingService.media_observable;
+    
   }
   fileContent: any;
 
@@ -37,6 +39,7 @@ export class TablaComponent implements OnInit {
     console.log('Datos:', this.datos);
     console.log('Filas:', this.filas);
     console.log(this.datos);
+
   }
 
   getElement(fila: number, columna: number): ParkingSpot | undefined {
@@ -70,7 +73,7 @@ export class TablaComponent implements OnInit {
       distribution.forEach(async (element: { id: any; id_Parking: any; fila: number; columna: number; esPlaza: boolean }) => {
         if (element.esPlaza) {
           var plazasData = {
-            ocupado: boleanoAleatorio(),
+            ocupado: false,
             id_Parking: parking.id,
             id_Distribucion: element.id,
           };
@@ -78,20 +81,6 @@ export class TablaComponent implements OnInit {
           await lastValueFrom(this.distribucion.postAddPlaza(plazasData));
         }
       });
-
-      function boleanoAleatorio() {
-        const ran = Math.random();
-        console.log(ran);
-        var numero =  ran >= 0.5 ? 2 : 1;
-        console.log(numero);
-        if(numero == 1) {
-          return true;
-        }else{
-          return false
-        }
-      }
-      
-
     }
   }
 
@@ -108,6 +97,8 @@ export class TablaComponent implements OnInit {
   startTimeout(){
     var ocupaciones :number = 0;
     var actualizaciones :number = 0;
+    console.log("this.datos[0].idParking");
+    
 
     function boleanoAleatorio() {
       const ran = Math.random();
@@ -121,15 +112,34 @@ export class TablaComponent implements OnInit {
       }
     }
 
-    setInterval(() => {
+    setInterval(async () => {
+      console.log(this.datos[0].id);
+
+    console.log("plazass");
+    console.log(this.plazasA);
+      
+      this.plazasA.forEach(async (element: Plaza) => {
+        
+        element.ocupado = boleanoAleatorio();
+        if (element.ocupado) {
+          ocupaciones++;
+        }console.log("entra");
+        console.log(element.id);
+        await lastValueFrom(this.distribucion.putPlaza(element.id ,element));
+      });
+
+
+      /*
       this.datos.forEach(element => {
         if (element.esPlaza) {
+          //to do Put plaza
           element.ocupado = boleanoAleatorio();
           if (element.ocupado) {
             ocupaciones++;
           }
         }
       });
+      */
       actualizaciones++;
 
       const media = new Media(ocupaciones, actualizaciones);
@@ -138,4 +148,5 @@ export class TablaComponent implements OnInit {
       this.sharingService.media_observableData = media;
     }, 3000);
   }
+
 }

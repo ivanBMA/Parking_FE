@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
+import { Plaza } from '../models/parking-spot.model';
 
 @Injectable({
   providedIn: 'root'
@@ -43,7 +44,7 @@ export class DistribucionService {
   postRellenarDistribution(): Observable<any> {
     const url = `${this.apiUrl}/DistribucionPlazas/rellenarDistribucion`;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<any>(url,  { headers: headers });
+    return this.http.post<any>(url, { headers: headers });
   }
   postRellenarDistributionDeFichero(plazasData: any): Observable<any> {
     const url = `${this.apiUrl}/DistribucionPlazas/rellenarDistribucion`;
@@ -66,5 +67,11 @@ export class DistribucionService {
   getAllPlazas(): Observable<any> {
     const url = `${this.apiUrl}/Plazas/getAllPlazas`;
     return this.http.get<any>(url);
+  }
+
+  putPlaza(id: number, parkingData: any): Observable<any> {
+    const url = `${this.apiUrl}/Plazas/putPlaza/${id}`;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.put<any>(url, parkingData, { headers: headers })
   }
 }

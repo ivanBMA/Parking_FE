@@ -1,4 +1,4 @@
-<h1>Parking {{ (data$ | async)?.Id }} media {{((media$ | async)!.ocupaciones / (media$ | async)!.actualizaciones).toFixed(2)}}</h1>
+<h1>Parking {{ (parkingOb$ | async)?.Id }} media {{((media$ | async)!.ocupaciones / (media$ | async)!.actualizaciones).toFixed(2)}}</h1>
 <div class="container">
   <h2>Insertar parking</h2>
   <input type="file" accept=".json" id="nombre" #nombreInput>

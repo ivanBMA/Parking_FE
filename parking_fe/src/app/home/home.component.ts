@@ -3,7 +3,7 @@ import { DistribucionService } from '../core/services/distribucion.service';
 import { Observable, Subscription, lastValueFrom } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TablaComponent } from '../tabla/TablaComponent';
-import { Parking, ParkingSpot } from '../core/models/parking-spot.model';
+import { Parking, ParkingSpot, Plaza } from '../core/models/parking-spot.model';
 import { SharingService } from '../core/services/sharing.service';
 
 @Component({
@@ -18,6 +18,8 @@ export class HomeComponent implements OnInit {
   filas: number[] = [];
   columnas: number[] = [];
   Parkings: Parking[] = [];
+  plazasA: Plaza[] = [];
+
   public data$: Observable<Parking>;
   private subscription: Subscription | undefined;
   
@@ -62,6 +64,7 @@ export class HomeComponent implements OnInit {
     console.log('Distribución:', distribution);
 
     const plazas = await lastValueFrom(this.distribucion.getAllPlazasByParking(parking));
+    this.plazasA = plazas;
     console.log('Plazas:', plazas);
 
     distribution.forEach((element: { esPlaza: boolean; id: number; id_Parking: number; fila: number; columna: number; }) => {
@@ -82,5 +85,7 @@ export class HomeComponent implements OnInit {
     const maxColumnas = Math.max(...distribution.map((d: { columna: any; }) => d.columna)) + 1;
     this.filas = Array.from({ length: maxFilas }, (_, i) => i);
     this.columnas = Array.from({ length: maxColumnas }, (_, i) => i);
+
+
   }
 }
