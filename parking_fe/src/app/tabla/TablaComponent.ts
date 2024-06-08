@@ -4,6 +4,7 @@ import { Parking, ParkingSpot } from '../core/models/parking-spot.model';
 import { DistribucionService } from '../core/services/distribucion.service';
 import { Observable, lastValueFrom } from 'rxjs';
 import { SharingService } from '../core/services/sharing.service';
+import { Media } from '../core/models/media';
 
 
 @Component({
@@ -20,22 +21,22 @@ export class TablaComponent implements OnInit {
   @Input() Parkings: Parking[] = [];
   @ViewChild('nombreInput') nombreInput!: ElementRef;
   public data$: Observable<Parking>;
+  public media$: Observable<Media>;
 
   constructor(private readonly distribucion: DistribucionService, public sharingService: SharingService) { 
     this.data$ = sharingService.parking_Id_observable;
+    this.media$ = sharingService.media_observable;
   }
   fileContent: any;
 
 
 
   ngOnInit() {
-
+    this.startTimeout();
 
     console.log('Datos:', this.datos);
     console.log('Filas:', this.filas);
     console.log(this.datos);
-
-    
   }
 
   getElement(fila: number, columna: number): ParkingSpot | undefined {
@@ -102,5 +103,39 @@ export class TablaComponent implements OnInit {
     const parkingIdParseado: number = parseInt(parkingId, 10);
     const parking = new Parking(parkingIdParseado, "a");
     this.sharingService.parking_Id_observableData = parking;
+  }
+  
+  startTimeout(){
+    var ocupaciones :number = 0;
+    var actualizaciones :number = 0;
+
+    function boleanoAleatorio() {
+      const ran = Math.random();
+      console.log(ran);
+      var numero =  ran >= 0.5 ? 2 : 1;
+      console.log(numero);
+      if(numero == 1) {
+        return true;
+      }else{
+        return false
+      }
+    }
+
+    setInterval(() => {
+      this.datos.forEach(element => {
+        if (element.esPlaza) {
+          element.ocupado = boleanoAleatorio();
+          if (element.ocupado) {
+            ocupaciones++;
+          }
+        }
+      });
+      actualizaciones++;
+
+      const media = new Media(ocupaciones, actualizaciones);
+      console.log("media");
+      console.log(media);
+      this.sharingService.media_observableData = media;
+    }, 3000);
   }
 }

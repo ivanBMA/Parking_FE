@@ -13,6 +13,8 @@ table {
   .celda-true {
     color: white;
     background-color: black; /* Color de fondo para celdas con valor true */
+    height: 100px;
+
   }
   
   .celda-false {
@@ -20,10 +22,14 @@ table {
   }
   .plaza-ocupada {
     background-color: red;
+    height: 100px;
+
   }
   
   .plaza-sinocupar {
     background-color: green;
+    height: 100px;
+
   }
 
   /*Boton*/
