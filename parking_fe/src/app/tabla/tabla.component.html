@@ -1,4 +1,15 @@
 <h1>Tabla de Distribución A</h1>
+<div class="container">
+  <h2>Insertar parking</h2>
+  <input type="file" accept=".json" id="nombre" #nombreInput>
+  <div id="enviar" (click)="handleClick()">Enviar</div>
+  <br>
+  <br> 
+  <h2>Elige un parking:</h2>
+  <select id="options" name="options" (change)="handleChange($event)">
+    <option *ngFor="let element of Parkings" [value]="element.Id">{{ element.Nombre }}</option>
+  </select>
+</div>
 <table border="1">
   <tr *ngFor="let fila of filas">
     <td *ngFor="let columna of columnas">

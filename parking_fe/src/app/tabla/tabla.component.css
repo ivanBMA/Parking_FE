@@ -1,12 +1,13 @@
 table {
     width: 100%;
     border-collapse: collapse;
+    border: 10px solid grey;
   }
   
   td {
     width: 16.66%; /* Cada celda ocupa un sexto del ancho total */
     text-align: center;
-    padding: 8px;
+    padding: 1px;
   }
  
   .celda-true {
@@ -23,4 +24,50 @@ table {
   
   .plaza-sinocupar {
     background-color: green;
+  }
+
+  /*Boton*/
+  .container {
+    background-color: grey;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    appearance: none;
+    background-color: #fff;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><polygon points="0,0 20,0 10,10" fill="%23333"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px 10px;
+    cursor: pointer;
+  }
+  
+  select:focus {
+    border-color: #007BFF;
+    outline: none;
+  }
+
+  #enviar{
+    background-color: black;
+    color: white;
+    width: auto;
+  }
+  #enviar:hover{
+    background-color: white;
+    color: black;
+    width: auto;
   }

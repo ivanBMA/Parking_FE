@@ -8,4 +8,11 @@ export class ParkingSpot {
       public ocupado?: boolean
     ) {}
 }
+
+export class Parking {
+  constructor(
+    public Id: number ,
+    public Nombre :string 
+  ) {}
+}
   

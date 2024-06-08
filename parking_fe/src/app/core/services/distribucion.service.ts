@@ -24,6 +24,12 @@ export class DistribucionService {
     return this.http.get<any>(url);
   }
 
+  getParkingsById(id: any): Observable<any> {
+    const url = `${this.apiUrl}/Parkings/getById`;
+    let params = new HttpParams().set('id', id);
+    return this.http.get<any>(url, { params });
+  }
+
   //DistribucionPlazas
   getAllDistribucionPlazas(): Observable<any> {
     const url = `${this.apiUrl}/DistribucionPlazas/getAllDistribucionPlazas`;
@@ -39,7 +45,11 @@ export class DistribucionService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post<any>(url,  { headers: headers });
   }
-  
+  postRellenarDistributionDeFichero(plazasData: any): Observable<any> {
+    const url = `${this.apiUrl}/DistribucionPlazas/rellenarDistribucion`;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(url, plazasData, { headers: headers });
+  }
 
   //Plazas
   postAddPlaza(plazasData: any): Observable<any> {
