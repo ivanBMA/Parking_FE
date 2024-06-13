@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
-import { Parking } from '../models/parking-spot.model';
+import { Parking, ParkingSpot } from '../models/parking-spot.model';
 import { Media } from '../models/media';
 
 @Injectable({
@@ -32,5 +32,21 @@ export class SharingService {
 
     set media_observableData(data: Media){
         this.media_observable_Private.next(data);
+    }
+
+    private parkingSpots_list: BehaviorSubject<ParkingSpot[]> 
+        = new BehaviorSubject<ParkingSpot[]>([]);
+
+    get parkingSpot_observable() {
+        return this.parkingSpots_list.asObservable();
+    }
+
+    addParkingSpot(spot: ParkingSpot) {
+        const currentSpots = this.parkingSpots_list.value;
+        this.parkingSpots_list.next([...currentSpots, spot]);
+    }
+
+    clearParkingSpots() {
+        this.parkingSpots_list.next([]);
     }
 }

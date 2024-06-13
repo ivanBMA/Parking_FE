@@ -60,20 +60,39 @@ table {
     background-position: right 10px center;
     background-size: 10px 10px;
     cursor: pointer;
+    text-align: center;
+    font-size: large;
   }
   
   select:focus {
-    border-color: #007BFF;
-    outline: none;
+    background-color: black;
+    color: white;
+    
+  }
+  select:hover {
+    background-color: black;
+    color: white;
+    
   }
 
   #enviar{
+    margin-top: 1rem;
+    border-radius: 10px;
     background-color: black;
     color: white;
     width: auto;
+    text-align: center;
   }
   #enviar:hover{
     background-color: white;
     color: black;
     width: auto;
+  }
+  #nombre{
+    text-align: center;
+    font-size: large;
+    color: white;
+    background-color: black;
+    border-radius: 10px;
+    padding: 1rem;
   }

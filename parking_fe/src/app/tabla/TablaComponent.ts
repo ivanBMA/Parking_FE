@@ -23,11 +23,13 @@ export class TablaComponent implements OnInit {
   @ViewChild('nombreInput') nombreInput!: ElementRef;
   public parkingOb$: Observable<Parking>;
   public media$: Observable<Media>;
-  
+  public parkingSpots_list$: Observable<ParkingSpot[]>;//<------x
+
+
   constructor(private readonly distribucion: DistribucionService, public sharingService: SharingService) { 
     this.parkingOb$ = sharingService.parking_Id_observable;
     this.media$ = sharingService.media_observable;
-    
+    this.parkingSpots_list$ = this.sharingService.parkingSpot_observable;//<------x
   }
   fileContent: any;
 
@@ -114,9 +116,8 @@ export class TablaComponent implements OnInit {
 
     setInterval(async () => {
       console.log(this.datos[0].id);
-
-    console.log("plazass");
-    console.log(this.plazasA);
+      console.log("plazass");
+      console.log(this.plazasA);
       
       this.plazasA.forEach(async (element: Plaza) => {
         
@@ -124,6 +125,7 @@ export class TablaComponent implements OnInit {
         if (element.ocupado) {
           ocupaciones++;
         }console.log("entra");
+
         console.log(element.id);
         await lastValueFrom(this.distribucion.putPlaza(element.id ,element));
       });
@@ -146,6 +148,9 @@ export class TablaComponent implements OnInit {
       console.log("media");
       console.log(media);
       this.sharingService.media_observableData = media;
+     
+    console.log('Datos:', this.datos);
+
     }, 3000);
   }
 

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DistribucionService } from '../core/services/distribucion.service';
-import { Observable, Subscription, lastValueFrom } from 'rxjs';
+import { Observable, Subscription, interval, lastValueFrom } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { TablaComponent } from '../tabla/TablaComponent';
 import { Parking, ParkingSpot, Plaza } from '../core/models/parking-spot.model';
@@ -13,7 +14,7 @@ import { SharingService } from '../core/services/sharing.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   datos: ParkingSpot[] = [];
   filas: number[] = [];
   columnas: number[] = [];
@@ -22,22 +23,28 @@ export class HomeComponent implements OnInit {
 
   public data$: Observable<Parking>;
   private subscription: Subscription | undefined;
+  private intervalSubscription: Subscription | undefined;
   
   constructor(private readonly distribucion: DistribucionService, public sharingService: SharingService) { 
     this.data$ = sharingService.parking_Id_observable;
   }
 
   ngOnInit() {
-    this.subscription = this.data$.subscribe(async (parking: Parking) => {
+    this.loadInitialData();
+
+    this.intervalSubscription = interval(4000).pipe(
+      switchMap(() => this.data$)
+    ).subscribe(async (parking: Parking) => {
       await this.loadParkingData(parking.Id);
     });
-
-    this.loadInitialData();
   }
 
   ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();
+    }
+    if (this.intervalSubscription) {
+      this.intervalSubscription.unsubscribe();
     }
   }
 
@@ -54,8 +61,6 @@ export class HomeComponent implements OnInit {
   }
 
   async loadParkingData(parkingId: number) {
-    this.datos = []; // Limpiar datos previos
-
     const parkingEntero = await lastValueFrom(this.distribucion.getParkingsById(parkingId));
     const parking = parkingEntero.id;
     console.log('Parking:', parking);
@@ -67,17 +72,19 @@ export class HomeComponent implements OnInit {
     this.plazasA = plazas;
     console.log('Plazas:', plazas);
 
+    const nuevosDatos: ParkingSpot[] = [];
     distribution.forEach((element: { esPlaza: boolean; id: number; id_Parking: number; fila: number; columna: number; }) => {
       if (element.esPlaza === true) {
         plazas.forEach((element2: { id_Distribucion: number; ocupado: boolean; }) => {
           if (element.id === element2.id_Distribucion) {
-            this.datos.push(new ParkingSpot(element.id, element.id_Parking, element.fila, element.columna, element.esPlaza, element2.ocupado));
+            nuevosDatos.push(new ParkingSpot(element.id, element.id_Parking, element.fila, element.columna, element.esPlaza, element2.ocupado));
           }
         });
       } else {
-        this.datos.push(new ParkingSpot(element.id, element.id_Parking, element.fila, element.columna, element.esPlaza));
+        nuevosDatos.push(new ParkingSpot(element.id, element.id_Parking, element.fila, element.columna, element.esPlaza));
       }
     });
+    this.datos = nuevosDatos;
     console.log('Datos:', this.datos);
 
     // Obtener el número máximo de filas y columnas
@@ -85,7 +92,5 @@ export class HomeComponent implements OnInit {
     const maxColumnas = Math.max(...distribution.map((d: { columna: any; }) => d.columna)) + 1;
     this.filas = Array.from({ length: maxFilas }, (_, i) => i);
     this.columnas = Array.from({ length: maxColumnas }, (_, i) => i);
-
-
   }
 }
