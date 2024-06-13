@@ -95,4 +95,5 @@ table {
     background-color: black;
     border-radius: 10px;
     padding: 1rem;
+    background: linear-gradient(to right, #070404, #a86a6a);
   }
